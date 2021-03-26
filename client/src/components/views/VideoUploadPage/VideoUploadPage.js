@@ -63,18 +63,34 @@ function UploadVideoPage() {
         }
 
         formData.append("file", files[0]);
-        console.log(files[0]);
 
+        //파일or동영상 업로드
         Axios.post("/api/video/uploadfiles", formData, config).then(res => {
 
-            console.log("res : ", res);
             //파일 전송이 성공한 경우에
             if (res.data.success) {
                 console.log(res.data);
+
+                let variable = {
+                    url: res.data.url
+                    , fileName: res.data.fileName
+                }
+
+                console.log("썸네일 업로드 시작");
+                //썸네일
+                Axios.post("/api/video/thumbnail", variable).then((res) => {
+                    console.log("gdgd");
+                    if (res.data.success) {
+                        console.log("썸네일 업로드 성공");
+                    } else {
+                        alert("썸네일 생성에 실패했습니다.");
+                    }
+                })
             } else {
                 alert("업로드를 실패했습니다.");
             }
-        })
+        });
+
 
     }
 

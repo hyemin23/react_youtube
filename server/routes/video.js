@@ -2,16 +2,17 @@ const express = require('express');
 //라우터 객체를 만듬
 const router = express.Router();
 //const { Video } = require("../models/User");
-
 //const { auth } = require("../middleware/auth");
+
 const multer = require("multer");
 const path = require('path');
-
+var ffmpeg = require("fluent-ffmpeg");
 //=================================
 //             Video
 //=================================
 
 //STORAGE MULTER CONFIG
+//npm install multer --save
 var storage = multer.diskStorage({
     //어디에 저장할지
     destination: (req, file, cb) => {
@@ -48,8 +49,6 @@ const upload = multer({
 //앞에 경로는 안 적어줘도 됨.
 router.post("/uploadfiles", (req, res) => {
 
-    console.log("upload들어옴");
-
     //비디오를 서버에 저장한다.
     upload(req, res, err => {
         if (err) {
@@ -67,12 +66,44 @@ router.post("/uploadfiles", (req, res) => {
             , url: res.req.file.path
             , fileName: res.req.file.filename
         });
-
-
     })
-    //npm install multer --save
+});
+
+router.post("/thumbnail", (req, res) => {
+
+    console.log("썸네일 서버 들어옴");
+    let filePath = "";
+    let fileDuration = "";
+
+    //비디오 정보 가져오기
+    ffmpeg.ffprobe(req.body.url, function (errr, metadata) {
+        console.log("썸네일정보")
+        //console.dir(metadata);
+        fileDuration = metadata.format.duration
+    })
+
+
+    //썸네일 생성 
+    ffmpeg(req.body.url)
+        .on('filenames', function (filenames) {
+            console.log('Will generate ' + filenames.join(', '))
+            thumbsFilePath = "uploads/thumbnails/" + filenames[0];
+        })
+        .on('end', function () {
+            console.log('Screenshots taken');
+            return res.json({ success: true, thumbsFilePath: thumbsFilePath, fileDuration: fileDuration })
+        })
+        .screenshots({
+            // Will take screens at 20%, 40%, 60% and 80% of the video
+            count: 3,
+            folder: 'uploads/thumbnails',
+            size: '320x240',
+            // %b input basename ( filename w/o extension )
+            filename: 'thumbnail-%b.png'
+        });
 
 });
+
 
 
 
