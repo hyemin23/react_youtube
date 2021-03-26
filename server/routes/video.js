@@ -7,6 +7,9 @@ const router = express.Router();
 const multer = require("multer");
 const path = require('path');
 var ffmpeg = require("fluent-ffmpeg");
+const { Video } = require('../models/Video');
+
+
 //=================================
 //             Video
 //=================================
@@ -79,7 +82,8 @@ router.post("/thumbnail", (req, res) => {
     ffmpeg.ffprobe(req.body.url, function (errr, metadata) {
         console.log("썸네일정보")
         //console.dir(metadata);
-        fileDuration = metadata.format.duration
+        //console.log(metadata.format.duration); //동영상 길이
+        fileDuration = metadata.format.duration;
     })
 
 
@@ -91,7 +95,12 @@ router.post("/thumbnail", (req, res) => {
         })
         .on('end', function () {
             console.log('Screenshots taken');
-            return res.json({ success: true, thumbsFilePath: thumbsFilePath, fileDuration: fileDuration })
+
+            return res.json({
+                success: true
+                , thumbsFilePath: thumbsFilePath
+                , fileDuration: fileDuration
+            });
         })
         .screenshots({
             // Will take screens at 20%, 40%, 60% and 80% of the video
@@ -103,6 +112,22 @@ router.post("/thumbnail", (req, res) => {
         });
 
 });
+
+
+//비디오 정보 DB에 저장
+router.post("/uploadVideo", (req, res) => {
+
+    console.log("비디오 디비 저장");
+    //인스턴스 생성
+    //새로운 비디오 정보를 만든다
+    //req.body == 모든 정보가 담김 client쪽에서 보내는 (info변수)
+    const videoInfo = new Video(req.body);
+    videoInfo.save((err, doc) => {
+        if (err) return res.json({ success: false, err })
+        res.status(200).json({ success: true });
+    });
+});
+
 
 
 
