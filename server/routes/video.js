@@ -129,6 +129,22 @@ router.post("/uploadVideo", (req, res) => {
 });
 
 
+//메인페이지 로딩시 비디오들 가져오기
+router.get("/getVideos", (req, res) => {
+
+    //Video Collection안에 있는 모든 비디오를 가져오기
+    //그 안에서 populdate()메서드를 활용하여 그 비디오 안에 모든 유저정보를 가져올 수 있음.
+    Video.find()
+        .populate('writer')
+        .exec((err, videos) => {
+            if (err) return res.status(400).send(err);
+
+            res.status(200).json({
+                success: true
+                , videos
+            })
+        })
+});
 
 
 
