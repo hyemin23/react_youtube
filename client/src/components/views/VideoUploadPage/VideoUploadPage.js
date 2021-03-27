@@ -22,7 +22,7 @@ const Catogory = [
 ]
 
 
-function UploadVideoPage() {
+function UploadVideoPage(props) {
 
     //store에 있는 user 정보 가져오기
     const user = useSelector(state => state.user);
@@ -114,11 +114,16 @@ function UploadVideoPage() {
             thumbnail: ThumbnailPath
         }
 
-        console.log(info);
-
         Axios.post("/api/video/uploadVideo", info).then((res) => {
             if (res.data.success) {
-                alert("성공");
+
+                message.success("성공적으로 업로드 되었습니다.");
+
+                setTimeout(() => {
+
+                    props.history.push("/");
+                }, 2000);
+
             } else {
                 alert("비디오 업로드 실패했습니다.");
             }
@@ -131,37 +136,32 @@ function UploadVideoPage() {
     return (
         <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-
                 <Title level={2} > Upload Video</Title>
-
-                <Dropzone
-                    onDrop={onDrop}
-                    multiple={false}
-                    maxSize={800000000}>
-                    {({ getRootProps, getInputProps }) => (
-                        <div style={{ width: '300px', height: '240px', border: '1px solid lightgray', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                            {...getRootProps()}
-                        >
-                            <input {...getInputProps()} />
-                            <Icon type="plus" style={{ fontSize: '3rem' }} />
-
-                        </div>
-                    )}
-                </Dropzone>
-
-                {/*썸네일 */}
-                {ThumbnailPath && (
-                    <div>
-                        <img src={`http://localhost:5000/${ThumbnailPath}`} alt="썸네일" />
-                    </div>
-                )}
-
             </div>
 
             <Form onSubmit={onSubmit}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Dropzone
+                        onDrop={onDrop}
+                        multiple={false}
+                        maxSize={800000000}>
+                        {({ getRootProps, getInputProps }) => (
+                            <div style={{ width: '300px', height: '240px', border: '1px solid lightgray', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                {...getRootProps()}
+                            >
+                                <input {...getInputProps()} />
+                                <Icon type="plus" style={{ fontSize: '3rem' }} />
 
+                            </div>
+                        )}
+                    </Dropzone>
 
+                    {/*썸네일 */}
+                    {ThumbnailPath && (
+                        <div>
+                            <img src={`http://localhost:5000/${ThumbnailPath}`} alt="썸네일" />
+                        </div>
+                    )}
 
                 </div>
 
