@@ -24,9 +24,6 @@ function LandingPage() {
         })
     }, []);
 
-
-    console.log(Video);
-
     const renderCards = Video.map((video, index) => {
 
         let minutes = Math.floor(video.duration / 60);
@@ -35,14 +32,14 @@ function LandingPage() {
 
         return (
             <Col lg={6} md={8} xs={24}>
-                <a href={`/video/post/${video._id}`}>
-                    <div style={{ position: "relative" }}>
+                <div style={{ position: "relative" }}>
+                    <a href={`/video/${video._id}`} >
                         <img style={{ width: "100%" }} src={`http://localhost:5000/${video.thumbnail}`} />
                         <div className="duration">
                             <span>{minutes} : {seconds}</span>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
 
                 <br />
                 <Meta avatar={<Avatar src={video.writer.image} />}
