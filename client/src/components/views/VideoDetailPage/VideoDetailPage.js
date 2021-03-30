@@ -4,18 +4,23 @@ import axios from 'axios';
 import Subscriber from './Sections/Subscriber';
 import SideVideos from './Sections/SideVideos';
 import Comment from "./Sections/Comment";
+
+//props는 Router에서 :id로 매핑시켜줬기 때문에 받을 수 있음
 function DetailVideoPage(props) {
+
+    console.log("props : ", props);
 
 
     //댓글에 달릴 고유 비디오 번호 Comment에 알려주기
     const videoId = props.match.params.videoId;
     const [Video, setVideo] = useState([]);
 
+    //해당 게시물의 댓글 정보들 arr 
+    const [Comments, setComments] = useState([]);
 
     const videoVariable = {
         videoId: videoId
     }
-
     useEffect(() => {
         axios.post('/api/video/getVideo', videoVariable)
             .then(response => {
@@ -24,8 +29,19 @@ function DetailVideoPage(props) {
                 } else {
                     alert('Failed to get video Info')
                 }
-            })
+            });
 
+
+        //비디오id로 비디오에 달린 답글 정보 가져오기
+        axios.post("/api/comment/getComments", videoVariable).then((res) => {
+            if (res.data.success) {
+                //새로운 배열에 넣어주기
+                setComments(res.data.comments);
+            } else {
+                alert("댓글 정보를 가져오는 데 실패했습니다.");
+                return false;
+            }
+        });
 
     }, [])
 
@@ -36,8 +52,6 @@ function DetailVideoPage(props) {
         const subscribeButton = Video.writer._id !== localStorage.getItem("userId") && (
             <Subscriber userTo={Video.writer._id} userFrom={localStorage.getItem("userId")} />
         );
-
-        console.log("subscribeButton", subscribeButton);
 
         return (
             <Row>
@@ -58,6 +72,7 @@ function DetailVideoPage(props) {
 
                         {/*Comment */}
                         <Comment
+                            Comments={Comments}
                             videoId={videoId}
                         />
 

@@ -7,7 +7,7 @@ const commentSchema = mongoose.Schema(
             type: Schema.Types.ObjectId,
             ref: "User",
         },
-        postId: {
+        videoId: {
             type: Schema.Types.ObjectId
             , ref: "Video"
         },

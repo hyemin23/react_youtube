@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { message } from "antd";
+import SingleComment from "./SingleComment";
 
-function Comment({ videoId }) {
+function Comment({ videoId, Comments }) {
 
     const user = useSelector((state) => state.user);
     const [commentValue, setcommentValue] = useState("");
@@ -17,7 +18,7 @@ function Comment({ videoId }) {
         const variables = {
             content: commentValue,
             writer: user.userData._id,
-            postId: videoId,
+            videoId: videoId,
         };
 
         axios.post("/api/comment/saveComment", variables).then((response) => {
@@ -34,10 +35,13 @@ function Comment({ videoId }) {
     return (
         <div>
             <br />
-            <p>Replies</p>
+            <p>댓글</p>
             <hr />
 
             {/* Comment Lists */}
+            {Comments && Comments.map((comment, index) => (
+                <SingleComment key={index} comment={comment} videoId={videoId} />
+            ))}
 
 
             {/* Root Comment Form */}
