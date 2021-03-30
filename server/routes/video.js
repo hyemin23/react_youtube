@@ -8,6 +8,7 @@ const multer = require("multer");
 const path = require('path');
 var ffmpeg = require("fluent-ffmpeg");
 const { Video } = require('../models/Video');
+const { Subscriber } = require('../models/Subscriber');
 
 
 //=================================
@@ -17,14 +18,17 @@ const { Video } = require('../models/Video');
 //STORAGE MULTER CONFIG
 //npm install multer --save
 var storage = multer.diskStorage({
+
     //어디에 저장할지
     destination: (req, file, cb) => {
         cb(null, 'uploads/')
     },
+
     //어떤 파일이름으로 저장을 할 것인지.
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}_${file.originalname}`)
     },
+
     fileFilter: (req, file, cb) => {
         //확장자 판단
         const ext = path.extname(file.originalname)
@@ -34,7 +38,6 @@ var storage = multer.diskStorage({
         if (ext !== '.jpg') {
             return cb(res.status(400).end('only .jpg is allowed'), false);
         }
-
         //사진이면 진행
         cb(null, true);
     }
@@ -160,6 +163,40 @@ router.post("/getVideo", (req, res) => {
         });
 });
 
+//구독한 비디오 목록 가져오기
+router.post("/getSubscriptionVideos", (req, res) => {
 
+    console.log("getSubscriptionVideos");
+    console.log(req.body.userFrom);
+
+    //자신의 아이디를 가지고 구독하는 사람들을 찾는다.
+    Subscriber.find({ userFrom: req.body.userFrom }).exec((err, subscriberInfo) => {
+
+        let subscriberUser = [];
+
+        subscriberInfo.map((subscriber, index) => {
+            subscriberUser.push(subscriber.userTo);
+        });
+
+        //찾은 사람들의 비디오를 가지고 온다.
+        //$in : subscriberUser 안에 있는 모든 유저들을 갖고 탐색 가능
+        //(주의 : req.body.id 로 찾으면 안됨 이건 단건 검색일 경우에만 먹힘)
+        Video.find(
+            { writer: { $in: subscriberUser } })
+            .populate("writer")
+            .exec((err, videos) => {
+                if (err) return res.status(400).send(err);
+
+                res.status(200).json({
+                    success: true
+                    , videos
+                });
+            })
+    });
+
+    //찾은 사람들의 비디오를 가지고 온다.
+
+
+});
 
 module.exports = router;

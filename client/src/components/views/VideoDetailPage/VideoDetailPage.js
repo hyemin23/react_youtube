@@ -17,7 +17,6 @@ function DetailVideoPage(props) {
         axios.post('/api/video/getVideo', videoVariable)
             .then(response => {
                 if (response.data.success) {
-                    console.log(response.data.video)
                     setVideo(response.data.video)
                 } else {
                     alert('Failed to get video Info')
@@ -27,8 +26,13 @@ function DetailVideoPage(props) {
 
     }, [])
 
+    console.log("Video 정보 : , ", Video.writer?._id);
 
     if (Video.writer) {
+
+        //구독자의 아이디와 글쓴이의 id가 다르면
+        const subscribeButton = Video.writer._id !== localStorage.getItem("userId") && <Subscriber userTo={Video.writer._id} userFrom={localStorage.getItem("userId")} />;
+
         return (
             <Row>
                 <Col lg={18} xs={24}>
@@ -36,10 +40,10 @@ function DetailVideoPage(props) {
                         <video style={{ width: '100%' }} src={`http://localhost:5000/${Video.filePath}`} controls></video>
 
                         <List.Item
-                            actions={[<Subscriber userTo={Video.writer._id} userFrom={localStorage.getItem('userId')} />]}
+                            actions={[subscribeButton]}
                         >
                             <List.Item.Meta
-                                avatar={<Avatar src={Video.writer && Video.writer.image} />}
+                                avatar={<Avatar src={Video.writer && Video.writer?.image} />}
                                 title={<a href="https://ant.design">{Video.title}</a>}
                                 description={Video.description}
                             />
@@ -61,7 +65,6 @@ function DetailVideoPage(props) {
             <div>Loading...</div>
         )
     }
-
 
 }
 

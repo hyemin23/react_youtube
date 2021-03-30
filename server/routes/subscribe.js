@@ -13,7 +13,10 @@ const { Subscriber } = require("../models/Subscriber");
 router.post("/subscribeNumber", (req, res) => {
 
     console.log("Number찾기");
-    Subscriber.find({ userTo: req.body.userTo }).exec((err, subscribe) => {
+    console.log(req.body);
+    Subscriber.find({
+        userTo: req.body.userTo
+    }).exec((err, subscribe) => {
         if (err) return res.status(400).send(err);
 
         console.log(subscribe);
@@ -68,10 +71,13 @@ router.post("/unSubscribe", (req, res) => {
 });
 
 router.post("/subscribe", (req, res) => {
+    console.log("구독으로 변경");
     const subscribe = new Subscriber(req.body);
+
     subscribe.save((err, doc) => {
-        if (err) return res.json({ success: false, err });
-        res.status(200).json({ success: true });
+        if (err) return res.status(400).json({ success: false, err });
+
+        return res.status(200).json({ success: true });
     });
 });
 

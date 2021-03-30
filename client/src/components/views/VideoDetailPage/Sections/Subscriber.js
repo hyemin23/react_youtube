@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-function Subscriber(props) {
-    const userTo = props.userTo
-    const userFrom = props.userFrom
+function Subscriber({ userTo, userFrom }) {
 
     const [SubscribeNumber, setSubscribeNumber] = useState(0)
     const [Subscribed, setSubscribed] = useState(false)
@@ -19,6 +17,7 @@ function Subscriber(props) {
             axios.post('/api/subscribe/unSubscribe', subscribeVariables)
                 .then(response => {
                     if (response.data.success) {
+
                         setSubscribeNumber(SubscribeNumber - 1)
                         setSubscribed(!Subscribed)
                     } else {
@@ -28,9 +27,10 @@ function Subscriber(props) {
 
         } else {
             // when we are not subscribed yet
-
+            console.log("구독안함 -> 구독으로 ");
             axios.post('/api/subscribe/subscribe', subscribeVariables)
                 .then(response => {
+
                     if (response.data.success) {
                         setSubscribeNumber(SubscribeNumber + 1)
                         setSubscribed(!Subscribed)
@@ -45,7 +45,15 @@ function Subscriber(props) {
 
     useEffect(() => {
 
-        const subscribeNumberVariables = { userTo: userTo, userFrom: userFrom }
+        console.log("useEffect", userTo);
+
+        const subscribeNumberVariables = {
+            userTo: userTo, userFrom: userFrom
+        };
+
+        console.log("subscribeNumberVariables", subscribeNumberVariables);
+
+
         axios.post('/api/subscribe/subscribeNumber', subscribeNumberVariables)
             .then(response => {
                 if (response.data.success) {
@@ -60,16 +68,12 @@ function Subscriber(props) {
             .then(response => {
 
                 if (response.data.success) {
-                    console.log(response.data.result);
+                    console.log("result 정보 : ", response.data.result);
                     setSubscribed(response.data.result);
                 } else {
                     alert('Failed to get Subscribed Information')
                 }
             });
-
-
-
-
     }, [])
 
     console.log("구독 상태 : ", Subscribed);
