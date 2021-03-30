@@ -7,8 +7,10 @@ import Comment from "./Sections/Comment";
 function DetailVideoPage(props) {
 
 
-    const videoId = props.match.params.videoId
-    const [Video, setVideo] = useState([])
+    //댓글에 달릴 고유 비디오 번호 Comment에 알려주기
+    const videoId = props.match.params.videoId;
+    const [Video, setVideo] = useState([]);
+
 
     const videoVariable = {
         videoId: videoId
@@ -55,7 +57,9 @@ function DetailVideoPage(props) {
                         </List.Item>
 
                         {/*Comment */}
-                        <Comment />
+                        <Comment
+                            videoId={videoId}
+                        />
                     </div>
                 </Col>
                 <Col lg={6} xs={24}>
@@ -74,4 +78,4 @@ function DetailVideoPage(props) {
 
 }
 
-export default DetailVideoPage
+export default DetailVideoPage;

@@ -11,15 +11,10 @@ const { Subscriber } = require("../models/Subscriber");
 
 
 router.post("/subscribeNumber", (req, res) => {
-
-    console.log("Number찾기");
-    console.log(req.body);
     Subscriber.find({
         userTo: req.body.userTo
     }).exec((err, subscribe) => {
         if (err) return res.status(400).send(err);
-
-        console.log(subscribe);
         return res.status(200).json({
             success: true,
             subscribeNumber: subscribe.length
@@ -33,15 +28,12 @@ router.post("/subscribeNumber", (req, res) => {
 router.post("/subscribed", (req, res) => {
     Subscriber.find({ userTo: req.body.userTo, userFrom: req.body.userFrom }).exec(
         (err, subscribe) => {
-            console.log("subscribed 구독확인");
-            console.log("구독했나요 ? : ", subscribe.length);
 
             if (err) return res.status(400).send(err);
 
             let result = false;
             //구독을 했으면 result = true;
             if (subscribe.length !== 0) {
-                console.log("구독 함");
                 return res.status(200).json({
                     success: true
                     , result: true
@@ -49,7 +41,6 @@ router.post("/subscribed", (req, res) => {
             }
             //구독을 안 했으면 result = false
             else {
-                console.log("구독 안함");
                 return res.status(200).json({
                     success: true
                     , result: result
