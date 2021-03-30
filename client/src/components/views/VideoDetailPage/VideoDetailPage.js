@@ -26,12 +26,15 @@ function DetailVideoPage(props) {
 
     }, [])
 
-    console.log("Video 정보 : , ", Video.writer?._id);
-
     if (Video.writer) {
 
-        //구독자의 아이디와 글쓴이의 id가 다르면
-        const subscribeButton = Video.writer._id !== localStorage.getItem("userId") && <Subscriber userTo={Video.writer._id} userFrom={localStorage.getItem("userId")} />;
+        //내가 작성한 게시물은 동영상이 안 보여야함
+        //즉, 다른 사람이 업로드한 동영상만 보여야함
+        const subscribeButton = Video.writer._id !== localStorage.getItem("userId") && (
+            <Subscriber userTo={Video.writer._id} userFrom={localStorage.getItem("userId")} />
+        );
+
+        console.log("subscribeButton", subscribeButton);
 
         return (
             <Row>

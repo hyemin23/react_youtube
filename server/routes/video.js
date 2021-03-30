@@ -166,9 +166,6 @@ router.post("/getVideo", (req, res) => {
 //구독한 비디오 목록 가져오기
 router.post("/getSubscriptionVideos", (req, res) => {
 
-    console.log("getSubscriptionVideos");
-    console.log(req.body.userFrom);
-
     //자신의 아이디를 가지고 구독하는 사람들을 찾는다.
     Subscriber.find({ userFrom: req.body.userFrom }).exec((err, subscriberInfo) => {
 

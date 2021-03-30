@@ -45,7 +45,6 @@ function Subscriber({ userTo, userFrom }) {
 
     useEffect(() => {
 
-        console.log("useEffect", userTo);
 
         const subscribeNumberVariables = {
             userTo: userTo, userFrom: userFrom
@@ -76,8 +75,9 @@ function Subscriber({ userTo, userFrom }) {
             });
     }, [])
 
-    console.log("구독 상태 : ", Subscribed);
+
     return (
+
         <div>
             <button
                 onClick={onSubscribe}
