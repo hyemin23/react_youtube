@@ -1,42 +1,35 @@
-import { message } from 'antd';
-import Axios from 'axios';
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
-function Comment(videoId) {
+import React, { useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { message } from "antd";
 
-    const [areaInput, setAreaInput] = useState("");
+function Comment({ videoId }) {
 
-    //useSelector Hook 을 사용하려 redux에 있는 정보 가져오기
-    const user = useSelector(state => state.user);
+    const user = useSelector((state) => state.user);
+    const [commentValue, setcommentValue] = useState("");
 
-    const onChange = (e) => {
-        const { value } = e.target;
-        setAreaInput(value);
-    }
+    const handleClick = (e) => {
+        setcommentValue(e.currentTarget.value);
+    };
+
     const onSubmit = (e) => {
         e.preventDefault();
-
-        //댓글 정보 변수
         const variables = {
-            content: areaInput
-            , writer: user.userData._id
-            , postId: videoId
+            content: commentValue,
+            writer: user.userData._id,
+            postId: videoId,
         };
 
-
-        //댓글 정보 저장
-        Axios.post("/api/comment/saveComment", variables).then((res) => {
-            if (res.data.success) {
-                console.log(res.data);
-                message.success("댓글 저장 성공!");
-
+        axios.post("/api/comment/saveComment", variables).then((response) => {
+            if (response.data.success) {
+                message.success("댓글을 성공적으로 저장했습니다!");
+                setcommentValue("");
             } else {
-                console.log(res.data.err.message);
-                message.warning("댓글 저장 실패");
+                message.warning("댓글을 저장하지 못 했습니다.");
                 return false;
             }
-        })
-    }
+        });
+    };
 
     return (
         <div>
@@ -44,24 +37,24 @@ function Comment(videoId) {
             <p>Replies</p>
             <hr />
 
-            {/*Comment 리스트 */}
+            {/* Comment Lists */}
+
 
             {/* Root Comment Form */}
-            <form style={{ display: "flex", }} onSubmit={onSubmit}>
+            <form style={{ display: "flex", marginTop: "18px" }} onSubmit={onSubmit}>
                 <textarea
                     style={{ width: "100%", borderRadius: "5px" }}
-                    onChange={onChange}
-                    value={areaInput}
-                    placeholder="댓글을 입력해주세요."
+                    onChange={handleClick}
+                    value={commentValue}
+                    placeholder="댓글을 작성해주세요"
                 />
                 <br />
-
-                <button style={{ width: "20%", height: "52px", borderRadius: "5px" }} onClick={onSubmit}>
+                <button style={{ width: "20%", height: "52px" }} onClick={onSubmit}>
                     Submit
                 </button>
             </form>
         </div>
-    )
+    );
 }
 
-export default Comment
+export default Comment;
