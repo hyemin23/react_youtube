@@ -4,6 +4,7 @@ import axios from 'axios';
 import Subscriber from './Sections/Subscriber';
 import SideVideos from './Sections/SideVideos';
 import Comment from "./Sections/Comment";
+import LikeDislikes from './Sections/LikeDislikes';
 
 //props는 Router에서 :id로 매핑시켜줬기 때문에 받을 수 있음
 function DetailVideoPage(props) {
@@ -70,7 +71,7 @@ function DetailVideoPage(props) {
                         <video style={{ width: '100%' }} src={`http://localhost:5000/${Video.filePath}`} controls></video>
 
                         <List.Item
-                            actions={[subscribeButton]}
+                            actions={[<LikeDislikes />, subscribeButton]}
                         >
                             <List.Item.Meta
                                 avatar={<Avatar src={Video.writer && Video.writer?.image} />}
