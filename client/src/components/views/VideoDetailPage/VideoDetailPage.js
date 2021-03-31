@@ -80,7 +80,7 @@ function DetailVideoPage(props) {
                             <div></div>
                         </List.Item>
 
-                        {/*Comment */}
+                        {/*Comment 댓글 */}
                         <Comment
                             Comments={Comments}
                             videoId={videoId}

@@ -11,6 +11,7 @@ const Video = require("../models/Video");
 */
 
 router.post("/saveComment", (req, res) => {
+    console.log("saveComment 들어옴 ");
     const comment = new Comment(req.body);
     comment.save((err, comment) => {
 
