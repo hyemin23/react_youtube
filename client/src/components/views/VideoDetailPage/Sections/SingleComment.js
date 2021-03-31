@@ -10,7 +10,7 @@ function SingleComment({ comment, videoId }) {
 
     const [OpenReply, setOpenReply] = useState(false);
     const [textInput, setTextInput] = useState("");
-    const user = useSelector((state) => state.user);
+    const user = useSelector(state => state.user);
 
     //답글 클릭 상태에 따라 폼이 보여지거나 안 보여지게 할 수 있음.
     const onClick = (e) => {
@@ -39,10 +39,8 @@ function SingleComment({ comment, videoId }) {
         };
 
         Axios.post("/api/comment/saveComment", variables).then((res) => {
-            console.log(res);
             if (res.data.success) {
                 message.success("댓글이 등록 되었습니다!");
-
                 //form 가리기
                 setOpenReply(prev => !prev);
             } else {
@@ -50,17 +48,12 @@ function SingleComment({ comment, videoId }) {
                 return false;
             }
         });
-
         setTextInput("");
     }
-
-
-
-
-    //key 쪽에서 comment는 무슨 역할을 하는거지 ?
-    // -> ant에서 그냥 사용하고 있음
     const actions = [
-        <span onClick={onClick} key="comment-basic-reply-to">답글</span>
+        <span onClick={onClick} key="comment-basic-reply-to">
+            Reply to
+        </span>,
     ];
 
     return (
@@ -68,28 +61,25 @@ function SingleComment({ comment, videoId }) {
             <Comment
                 actions={actions}
                 author={comment.writer.name}
-                avatar={<Avatar src={comment.writer.image} alt="profile-image" />}
-                content={comment.content}
+                avatar={<Avatar src={comment.writer.image} />}
+                content={<p>{comment.content} </p>}
             />
-
-            {OpenReply &&
+            {OpenReply && (
                 <form style={{ display: "flex" }} onSubmit={onSubmit}>
                     <textarea
                         style={{ width: "100%", borderRadius: "5px" }}
-                        placeholder="댓글입 입력해 주세요."
                         onChange={onHandleChange}
                         value={textInput}
+                        placeholder="댓글을 작성해주세요"
                     />
                     <br />
-                    <button style={{ width: "20%", height: "52px" }}
-                        onClick={onSubmit}
-                    >
-                        등록
-                </button>
+                    <button style={{ width: "20%", height: "52px" }} onClick={onSubmit}>
+                        Submit
+                    </button>
                 </form>
-            }
+            )}
         </div>
-    )
+    );
 }
 
-export default SingleComment
+export default SingleComment;

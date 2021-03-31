@@ -11,7 +11,8 @@ function Comment({ videoId, Comments, refreshFunction }) {
     const [commentValue, setcommentValue] = useState("");
 
     const handleClick = (e) => {
-        setcommentValue(e.currentTarget.value);
+        const { value } = e.target;
+        setcommentValue(value);
     };
 
     const onSubmit = (e) => {
@@ -40,7 +41,7 @@ function Comment({ videoId, Comments, refreshFunction }) {
     return (
         <div>
             <br />
-            <p>댓글</p>
+            <p>댓글목록</p>
             <hr />
 
 
@@ -57,21 +58,27 @@ function Comment({ videoId, Comments, refreshFunction }) {
                 */
             }
 
-            {Comments && Comments.map((comment, index) => (
-                //댓글의 주인 있을 경우에만
-                (!comment.responseTo &&
-                    <React.Fragment key={index}>
-                        <SingleComment key={index} comment={comment} videoId={videoId} />
+            {Comments &&
+                Comments.map(
+                    (comment, index) =>
+                        // 첫 댓글 진입
+                        //즉, 전체 comment talbe에서 전체 data(등록한 모든)가 아닌 responseTo(상태값 :답글)가 아닌 애들은 일단 제외하고 댓글들만 출력
+                        !comment.responseTo && (
+                            <React.Fragment key={index}>
+                                {/*비더오에 대한 댓글 출력 */}
+                                <SingleComment key={index} comment={comment} videoId={videoId}
+                                    refreshFunction={refreshFunction}
+                                />
 
-                        {/*
-                    ReplyComment는 댓글들에 대한 답글 Component이다.
-                    여기서는 인자를 각각의 게시물에 대한 각각의 댓글들(Comments배열)의 정보를 줘야함.
+                                {/*
+                    비디오의 댓글에대한 답글 출력 여기서 답글 출력하는 게 아니라 Reply 컴포넌트 안에서 댓글의 답글들을 뿌려야함. 여기는 답글들을 뿌리기 위한 정보들만 넘겨주기.
                     ->이유 : 그 댓글들의 답글들을 확인해야 하므로
                     */}
-                        <ReplyComment CommentLists={Comments} refreshFunction={refreshFunction} videoId={videoId} />
-                    </React.Fragment>
-                )
-            ))}
+
+                                <ReplyComment commentLists={Comments} refreshFunction={refreshFunction} videoId={videoId} parentCommentId={comment._id} />
+                            </React.Fragment>
+                        )
+                )}
 
 
 
