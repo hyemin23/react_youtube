@@ -3,8 +3,9 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { message } from "antd";
 import SingleComment from "./SingleComment";
+import ReplyComment from "./ReplyComment";
 
-function Comment({ videoId, Comments }) {
+function Comment({ videoId, Comments, refreshFunction }) {
 
     const user = useSelector((state) => state.user);
     const [commentValue, setcommentValue] = useState("");
@@ -25,6 +26,10 @@ function Comment({ videoId, Comments }) {
             if (response.data.success) {
                 message.success("댓글을 성공적으로 저장했습니다!");
                 setcommentValue("");
+
+                //새로고침
+                //인자로는 새로고침한 save 정보들을 돌려받은 최신 정보들을 넣어준다.
+                refreshFunction(response.data.result);
             } else {
                 message.warning("댓글을 저장하지 못 했습니다.");
                 return false;
@@ -40,8 +45,12 @@ function Comment({ videoId, Comments }) {
 
             {/* Comment Lists */}
             {Comments && Comments.map((comment, index) => (
-                <SingleComment key={index} comment={comment} videoId={videoId} />
+                <>
+                    <SingleComment key={index} comment={comment} videoId={videoId} />
+                    <ReplyComment />
+                </>
             ))}
+
 
 
             {/* Root Comment Form */}

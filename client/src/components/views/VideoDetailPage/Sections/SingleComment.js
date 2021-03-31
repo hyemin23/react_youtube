@@ -24,6 +24,9 @@ function SingleComment({ comment, videoId }) {
 
     }
 
+
+
+
     //key 쪽에서 comment는 무슨 역할을 하는거지 ?
     // -> ant에서 그냥 사용하고 있음
     const actions = [

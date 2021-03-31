@@ -8,9 +8,6 @@ import Comment from "./Sections/Comment";
 //props는 Router에서 :id로 매핑시켜줬기 때문에 받을 수 있음
 function DetailVideoPage(props) {
 
-    console.log("props : ", props);
-
-
     //댓글에 달릴 고유 비디오 번호 Comment에 알려주기
     const videoId = props.match.params.videoId;
     const [Video, setVideo] = useState([]);
@@ -43,7 +40,20 @@ function DetailVideoPage(props) {
             }
         });
 
-    }, [])
+    }, []);
+
+
+    //새로고침 함수
+    //매개변수 : 저장한 새로운 정보들 
+    const refreshFunction = (newComments) => {
+
+        //받아온 새로운 댓글 정보들을
+        //현재 Comments에 다시 setting해준다.
+        //주의할 점은 그 전에 Comments 정보들에 추가로 저장을해줘야함
+        //push는 새로운 immutable하지 않기 때문에 뮤타블한 concat으로 해야한다.
+        setComments(Comments.concat(newComments));
+
+    }
 
     if (Video.writer) {
 
@@ -74,14 +84,13 @@ function DetailVideoPage(props) {
                         <Comment
                             Comments={Comments}
                             videoId={videoId}
+                            refreshFunction={refreshFunction}
                         />
 
                     </div>
                 </Col>
                 <Col lg={6} xs={24}>
-
                     <SideVideos />
-
                 </Col>
             </Row>
         )
