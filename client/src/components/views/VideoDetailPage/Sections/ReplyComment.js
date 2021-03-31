@@ -3,9 +3,6 @@ import SingleComment from './SingleComment'
 
 function ReplyComment({ commentLists, refreshFunction, videoId, parentCommentId }) {
 
-    console.log("코멘트 리스트들 : ", commentLists);
-
-
     //딥글 개수
     const [ChildCommentNumber, setChildCommentNumber] = useState(0);
     //답글 form open 여부

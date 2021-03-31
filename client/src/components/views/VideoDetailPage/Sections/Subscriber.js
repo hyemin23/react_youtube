@@ -50,8 +50,6 @@ function Subscriber({ userTo, userFrom }) {
             userTo: userTo, userFrom: userFrom
         };
 
-        console.log("subscribeNumberVariables", subscribeNumberVariables);
-
 
         axios.post('/api/subscribe/subscribeNumber', subscribeNumberVariables)
             .then(response => {

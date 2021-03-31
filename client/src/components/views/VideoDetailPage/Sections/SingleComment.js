@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { Comment, Avatar, Button, Input, message } from "antd";
+import { Comment, Avatar, Button, Input, message, Tooltip, Icon } from "antd";
 import { useSelector } from 'react-redux';
 import Axios from 'axios';
+import LikeDislikes from './LikeDislikes';
 
 const { TextArea } = Input;
 
@@ -55,19 +56,28 @@ function SingleComment({ comment, videoId, refreshFunction }) {
         setTextInput("");
     }
     const actions = [
+
         <span onClick={onClick} key="comment-basic-reply-to">
             답글
-        </span>,
+            </span>,
+        <LikeDislikes
+            comment
+            commentId={comment._id}
+            userId={localStorage.getItem("userId")}
+
+        />
     ];
 
     return (
         <div>
             <Comment
+                comment
                 actions={actions}
                 author={comment.writer.name}
                 avatar={<Avatar src={comment.writer.image} />}
                 content={<p>{comment.content} </p>}
             />
+
             {OpenReply && (
                 <form style={{ display: "flex" }} onSubmit={onSubmit}>
                     <textarea

@@ -70,8 +70,16 @@ function DetailVideoPage(props) {
                     <div className="postPage" style={{ width: '100%', padding: '3rem 4em' }}>
                         <video style={{ width: '100%' }} src={`http://localhost:5000/${Video.filePath}`} controls></video>
 
+                        {/*비디오 좋아요인지 comment 좋아요인지 속성값으로 판별하기*/}
                         <List.Item
-                            actions={[<LikeDislikes />, subscribeButton]}
+                            actions={[
+                                <LikeDislikes
+                                    video
+                                    userId={localStorage.getItem("userId")}
+                                    videoId={videoId}
+                                />
+                                , subscribeButton
+                            ]}
                         >
                             <List.Item.Meta
                                 avatar={<Avatar src={Video.writer && Video.writer?.image} />}
