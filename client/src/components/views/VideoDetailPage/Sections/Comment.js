@@ -61,6 +61,8 @@ function Comment({ videoId, Comments, refreshFunction }) {
             {Comments &&
                 Comments.map(
                     (comment, index) =>
+
+
                         // 첫 댓글 진입
                         //즉, 전체 comment talbe에서 전체 data(등록한 모든)가 아닌 responseTo(상태값 :답글)가 아닌 애들은 일단 제외하고 댓글들만 출력
                         !comment.responseTo && (

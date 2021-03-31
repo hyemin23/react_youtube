@@ -6,7 +6,7 @@ import Axios from 'axios';
 const { TextArea } = Input;
 
 //댓글의 답글부분
-function SingleComment({ comment, videoId }) {
+function SingleComment({ comment, videoId, refreshFunction }) {
 
     const [OpenReply, setOpenReply] = useState(false);
     const [textInput, setTextInput] = useState("");
@@ -41,6 +41,10 @@ function SingleComment({ comment, videoId }) {
         Axios.post("/api/comment/saveComment", variables).then((res) => {
             if (res.data.success) {
                 message.success("댓글이 등록 되었습니다!");
+
+                //새로고침
+                refreshFunction(res.data.result);
+
                 //form 가리기
                 setOpenReply(prev => !prev);
             } else {
@@ -52,7 +56,7 @@ function SingleComment({ comment, videoId }) {
     }
     const actions = [
         <span onClick={onClick} key="comment-basic-reply-to">
-            Reply to
+            답글
         </span>,
     ];
 
