@@ -8,13 +8,13 @@ const likeSchema = mongoose.Schema(
             ref: "User",
         },
         commentId: {
-            type: Schema.Types.ObjectId
-            , ref: "Comment"
+            type: Schema.Types.ObjectId,
+            ref: "Comment",
         },
         videoId: {
             type: Schema.Types.ObjectId,
             ref: "Video",
-        }
+        },
     },
     { timestamps: true }
 );

@@ -78,9 +78,12 @@ function LikeDislikes(props) {
     //손가락 버튼 클릭 시
     const onLike = () => {
 
+        console.log(likeCheck);
+
         //좋아요 상태가 false면
         //Like 상태가 클릭이 안되어 있는 상태이고, 클릭했을 때 "1" 올려줘야함.
         if (!likeCheck) {
+            console.log("좋아요 상태 안 좋아요 false : ", likeCheck);
             //variable 상태에 따라서 비디오,댓글 좋아요인지 판단해서 결과 값을 받아옴.
             Axios.post("/api/like/upLike", variable).then((res) => {
                 if (res.data.success) {
@@ -89,6 +92,7 @@ function LikeDislikes(props) {
                     //like 정보 1 올려주기
                     setLikes(likes + 1);
                     //클릭한 상태로 만들어주기
+
                     setLikeCheck(true);
 
                     //만약 싫어요(dislike)가 클릭이 되어있다면 
@@ -107,6 +111,7 @@ function LikeDislikes(props) {
         //좋아요 상태가 true라면
         //즉,좋아요가 되어있는데 클릭을 했다면 좋아요 내리기
         else {
+            console.log("좋아요 상태 좋아요중 true :", likeCheck);
             Axios.post("/api/like/unLike", variable).then((res) => {
                 if (res.data.success) {
                     console.log("좋아요 내리기");
@@ -126,38 +131,73 @@ function LikeDislikes(props) {
     //싫어요 손가락 클릭 시 
     const onDisLike = () => {
 
+        //싫어요 로직 돌리기
+        //만약 싫어요가 클릭되어있지 않다면
+        if (!DislikeCheck) {
+            Axios.post("/api/like/upDisLike", variable).then((res) => {
+                console.log("싫어요 올리기");
+                if (res.data.success) {
+                    //정상적으로 싫어요를 올렸을 때 들어옴
+                    setDislikes(Dislikes + 1);
+                    setDislikeCheck(true);
+
+
+                    //만약 좋아요 버튼이 클릭되어 있다면
+                    if (likes) {
+                        //좋아요 버튼을 내리고, false값 (체크해제)로 만들어주기
+                        setLikes(likes - 1);
+                        setLikeCheck(false);
+                    }
+                } else {
+                    message.warning("싫어요를 올리지 못 하였습니다");
+                }
+            });
+        }
+        //싫어요가 클릭되어있다면
+        else {
+            Axios.post("/api/like/undisLike", variable).then((res) => {
+                console.log("싫어요 내리기");
+                if (res.data.success) {
+                    //정상적으로 싫어요를 내렸을 경울
+                    setDislikes(Dislikes - 1);
+                    setDislikeCheck(false);
+                } else {
+                    message.warning("싫어요를 내리지 못 하였습니다");
+                }
+            });
+        }
     }
 
 
 
 
     return (
-        !likeCheck && !DislikeCheck && (
-            <div>
-                <span key="comment-basic-like" >
-                    <Tooltip title="좋아요">
-                        <Icon type="like" theme={likes ? "filled" : "outlined"}
-                            onClick={onLike}
-                        />
-                    </Tooltip>
-                </span>
-                <span stlyle={{ paddingLeft: "8px", cursor: "auto" }}>
-                    {likes}
-                </span>
 
-                <span key="comment-basic-dislike" >
-                    <Tooltip title="싫어요">
-                        <Icon type="dislike" theme={Dislikes ? "filled" : "outlined"}
-                            onClick={onDisLike}
-                        />
-                    </Tooltip>
-                </span>
-                <span stlyle={{ paddingLeft: "8px", cursor: "auto" }}>
-                    {Dislikes}
-                </span>
+        <div>
+            <span key="comment-basic-like" >
+                <Tooltip title="좋아요">
+                    <Icon type="like" theme={likes ? "filled" : "outlined"}
+                        onClick={onLike}
+                    />
+                </Tooltip>
+            </span>
+            <span stlyle={{ paddingLeft: "8px", cursor: "auto" }}>
+                {likes}
+            </span>
 
-            </div>
-        )
+            <span key="comment-basic-dislike" >
+                <Tooltip title="싫어요">
+                    <Icon type="dislike" theme={Dislikes ? "filled" : "outlined"}
+                        onClick={onDisLike}
+                    />
+                </Tooltip>
+            </span>
+            <span stlyle={{ paddingLeft: "8px", cursor: "auto" }}>
+                {Dislikes}
+            </span>
+
+        </div>
+
     )
 }
 
